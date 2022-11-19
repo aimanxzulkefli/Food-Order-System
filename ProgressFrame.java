@@ -1,12 +1,16 @@
 import java.awt.*;
+import java.util.Random;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 public class ProgressFrame extends JFrame {
 
     JProgressBar progress1, progress2, progress3;
+    move movingBar;
+    Random random = new Random();
 
     ProgressFrame() {
         this.setTitle("Food-Dash");
@@ -66,53 +70,66 @@ public class ProgressFrame extends JFrame {
         this.add(panelRight, BorderLayout.EAST);
         this.setVisible(true);
 
-        progress();
-
+        movingBar = new move(progress1);
+        movingBar.start();
+        
     }
 
-    public void progress() {
+    class move extends Thread{
 
-        int counter = 0;
+        JProgressBar mBar;
 
-        while (counter <= 100) {
-            progress1.setValue(counter);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            counter += 10;
+        move(JProgressBar mBar){
+            mBar = progress1;
         }
-
-        progress1.setForeground(Color.green);
-
-        if (progress1.getValue() <= 100) {
-            counter = 0;
+        
+        public void run() {
+            
+            int counter = 0;
+    
             while (counter <= 100) {
-                progress2.setValue(counter);
+                progress1.setValue(counter);
                 try {
-                    Thread.sleep(1000);
+                    sleep(random.nextInt(1000)+1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                counter += 10;
+                counter += 1;
             }
-        }
-
-        progress2.setForeground(Color.green);
-
-        if (progress2.getValue() <= 100) {
-            counter = 0;
-            while (counter <= 100) {
-                progress3.setValue(counter);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            progress1.setForeground(new Color(34,139,34));
+    
+            if (progress1.getValue() == 100) {
+                counter = 0;
+                while (counter <= 100) {
+                    progress2.setValue(counter);
+                    try {
+                        sleep(random.nextInt(1000)+1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    counter += 1;
                 }
-                counter += 10;
             }
+            progress2.setForeground(new Color(34,139,34));
+    
+            if (progress2.getValue() == 100) {
+                counter = 0;
+                while (counter <= 100) {
+                    progress3.setValue(counter);
+                    try {
+                        sleep(random.nextInt(1000)+1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    counter += 1;
+                }
+            }
+            progress3.setForeground(new Color(34,139,34)); 
+
+            if(progress3.getValue()==100){
+                JOptionPane.showMessageDialog(null, "Order Complete");
+            }
+            dispose();
         }
-        progress3.setForeground(Color.green);
     }
 }
